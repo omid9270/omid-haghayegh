@@ -3,8 +3,11 @@ import numpy as np
 from keras.models import load_model
 # Load the trained model
 # model = joblib.load('linear_regression_model.pkl')
-model = load_model('model.h5')
-
+# model = load_model('model.h5')
+@st.cache(allow_output_mutation=True)
+def load_models():
+    model = load_model(model.h5, compile=False)
+    return model
 
 # Sidebar setup
 st.sidebar.header("**Ahmad Ali Rafique**")
