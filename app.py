@@ -3,12 +3,7 @@ import numpy as np
 from keras.models import load_model
 # Load the trained model
 # model = joblib.load('linear_regression_model.pkl')
-# model = load_model('model.h5')
-
-def load_model_func():
-    model = load_model('model.h5', compile=False)
-    return model
-
+model = load_model('model.h5')
 # Sidebar setup
 st.sidebar.header("**Ahmad Ali Rafique**")
 st.sidebar.write("AI & Machine Learning Expert")
@@ -43,14 +38,13 @@ input_data = np.array([[gender, age, hypertension, heart_disease, bmi, HbA1c_lev
 
 # Make a prediction
 if st.button('Predict'):
-    loaded_model=load_model_func()
-    prediction = loaded_model.predict(input_data)
+    prediction = model.predict(input_data)
     st.write("The estimated house price is: ")
-    # st.write(prediction[0])
-    # if prediction[0]>0.5:
-    #     st.write("yes")
-    # if prediction[0]<0.5:
-    #     st.write("no")
+    st.write(prediction[0])
+    if prediction[0]>0.5:
+        st.write("yes")
+    if prediction[0]<0.5:
+        st.write("no")
 
 # Footer or additional information
 st.write("""
