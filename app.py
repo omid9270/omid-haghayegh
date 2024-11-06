@@ -1,10 +1,12 @@
 import streamlit as st
 import numpy as np
-from keras.models import load_model
+# from keras.models import load_model
+import tensorflow as tf
 # Load the trained model
 # model = joblib.load('linear_regression_model.pkl')
 
-model = load_model('model.h5')
+model = tf.keras.models.load_model('model.h5')
+
 # Sidebar setup
 st.sidebar.header("**Ahmad Ali Rafique**")
 st.sidebar.write("AI & Machine Learning Expert")
