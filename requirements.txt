@@ -3,3 +3,6 @@ numpy
 streamlit
 tensorflow
 pandas
+joblib
+scikit-learn
+matplotlib
