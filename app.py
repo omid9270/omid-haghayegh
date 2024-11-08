@@ -1,13 +1,12 @@
 import streamlit as st
 import numpy as np
-# from keras.models import load_model
 import tensorflow as tf
 import pandas as pd  # @ برای وارد کردن pandas
 import matplotlib.pyplot as plt  # @ برای وارد کردن matplotlib
 import seaborn as sns  # @ Importing seaborn for creating heatmaps
-
 import keras
 import joblib
+
 # Load the trained model
 scaler = joblib.load('standard_scaler.pkl')  # Make sure to save your StandardScaler in project.py
 load_diabetes = joblib.load('load_diabetes.pkl')
@@ -17,19 +16,15 @@ model = keras.models.load_model('model.h5', compile = False)
 
 model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
 
-# Sidebar setup
-st.sidebar.header("**Ahmad Ali Rafique**")
-st.sidebar.write("AI & Machine Learning Expert")
 
-st.sidebar.header("Contact Information", divider='rainbow')
-st.sidebar.write("Feel free to reach out through the following")
-st.sidebar.write("[LinkedIn](https://www.linkedin.com/in/ahmad-ali-rafique/)")
-st.sidebar.write("[GitHub](https://github.com/Ahmad-Ali-Rafique/)")
-st.sidebar.write("[Email](mailto:arsbussiness786@gmail.com)")
-st.sidebar.write("Developed by Ahmad Ali Rafique", unsafe_allow_html=True)
 
 # Menu options
-menu = st.sidebar.radio("Select a section:", ("Home", "Plots"))
+st.sidebar.header("MENU", divider='rainbow')
+menu = st.sidebar.radio("Select a section:", ("Home", "Plots", "About Project"))
+
+# Sidebar setup
+st.sidebar.header("**Developed by :**", divider='rainbow')
+st.sidebar.write("Omid Haghayegh (Fall 2024)")
 
 if menu == "Home":
     # Title of the application
@@ -67,9 +62,6 @@ if menu == "Home":
             st.write("No. Low Risk")
 
 
-
-
-
 elif menu == "Plots":
     # # Load test data from project.py
     # import project  # @ برای وارد کردن داده‌ها از فایل project.py
@@ -93,7 +85,7 @@ elif menu == "Plots":
         # import project
         diabetes = load_diabetes  # @ Access the load_diabetes DataFrame
         plt.figure(figsize=(12, 8))
-        sns.heatmap(diabetes[['diabetes', 'age', 'bmi', 'HbA1c_level', 'blood_glucose_level', 'gender', 'heart_disease']].corr(), 
+        sns.heatmap(diabetes[['diabetes', 'age', 'bmi', 'HbA1c_level', 'blood_glucose_level', 'gender', 'heart_disease', 'hypertension']].corr(), 
                      annot=True, fmt=".2f", cmap='coolwarm')
         plt.title('Heatmap of Diabetes Dataset Features')
         st.pyplot(plt)
