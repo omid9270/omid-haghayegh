@@ -6,13 +6,13 @@ import seaborn as sns
 import keras
 import joblib
 
-# Load the trained model
+
 scaler = joblib.load('standard_scaler.pkl')
 load_diabetes = joblib.load('load_diabetes.pkl')
 model = keras.models.load_model('model.h5', compile=False)
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# CSS for loading the font
+
 st.markdown(
     """
     <style>
@@ -49,24 +49,24 @@ language = st.sidebar.radio("", ("فارسی","English"))
 
 if language == "فارسی":
     st.sidebar.header("منو :", divider='rainbow')
-    menu = st.sidebar.radio("یک گزینه را انتخاب کنید:", ("Home", "Plots", "About Project"))
+    menu = st.sidebar.radio("یک گزینه را انتخاب کنید:", ("صفحه اصلی", "نمودار", "درباره پروژه"))
     
     st.sidebar.header("**توسعه داده شده توسط :**", divider='rainbow')
     st.sidebar.write("امید حقایق (پاییز 1403)")
 else:
     st.sidebar.header("Menu :", divider='rainbow')
-    menu = st.sidebar.radio("Select a section:", ("Home", "Plots", "About Project"))
+    menu = st.sidebar.radio("Select a section:", ("صفحه اصلی", "نمودار", "درباره پروژه"))
     st.sidebar.header("**Developed by :**", divider='rainbow')
     st.sidebar.write("Omid Haghayegh (Fall 2024)")
 
 
 
-if menu == "Home":
+if menu == "صفحه اصلی":
     if language == "فارسی":
-        st.title("برنامه پیش‌بینی دیابت")
+        st.title("سامانه هوش مصنوعی پیشبینی دیابت")
         st.write("""
-        این برنامه خطر دیابت را بر اساس چندین ویژگی ورودی پیش‌بینی می‌کند.
-        لطفاً جزئیات زیر را وارد کنید تا پیش‌بینی دریافت کنید.
+        این سامانه هوش مصنوعی، خطر دیابت را بر اساس چندین ویژگی ورودی پیش‌بینی می‌کند.
+        لطفاً جزئیات زیر را وارد کنید:
         """)
         
         gender = st.selectbox("جنسیت", ("زن", "مرد"))
@@ -84,16 +84,15 @@ if menu == "Home":
         blood_glucose_level = st.number_input('سطح قند خون')
 
     else:
-        st.title("Diabetes Prediction Application")
+        st.title("AI diabetes diagnosis system")
         st.write("""
-        This application predicts the diabetes risk based on several input features.
-        Please enter the details below to get a prediction.
+        This application predicts the diabetes risk based on several input features
         """)
 
         gender = st.selectbox("Gender", ("Female", "Male"))
         gender_convert = 0 if gender == "Female" else 1
         age = st.number_input('Age',step=1,format="%d")
-        # age = st.slider("Age", 0, 100)
+        
 
         hypertension = st.selectbox("Hypertension", ("No", "Yes"))
         hypertension_convert = 0 if hypertension == "No" else 1
@@ -105,13 +104,15 @@ if menu == "Home":
         HbA1c_level = st.number_input('HbA1c Level')
         blood_glucose_level = st.number_input('Blood Glucose Level')
 
-    # Prepare the input for prediction
-    input_data = np.array([[gender_convert, age, hypertension_convert, heart_disease_convert, bmi, HbA1c_level, blood_glucose_level]])
     
-    # Standardize the input data
+    # input_data = np.array([[gender_convert, age, hypertension_convert, heart_disease_convert, bmi, HbA1c_level, blood_glucose_level]])
+    input_data = pd.DataFrame([[gender_convert, age, hypertension_convert, heart_disease_convert, bmi, HbA1c_level, blood_glucose_level]],
+                          columns=['gender', 'age', 'hypertension', 'heart_disease', 'bmi', 'HbA1c_level', 'blood_glucose_level'])
+
+    
     standardized_input = scaler.transform(input_data)
 
-    # دکمه پیش‌بینی با توجه به زبان
+   
     button_label = 'پیشبینی' if language == "فارسی" else 'Predict'
     if st.button(button_label, key='predict_button'):
         prediction = model.predict(standardized_input)
@@ -134,10 +135,19 @@ if menu == "Home":
             st.write(f"احتمال دیابت: {prediction[0].item() * 100:.2f} %")
             st.write(f"احتمال عدم دیابت: {(1 - prediction[0].item()) * 100:.2f} %")
 
-elif menu == "Plots":
+elif menu == "نمودار":
     diabetes = load_diabetes
-    plt.title('Heatmap of Diabetes Dataset Features')
+    st.write("""
+         این نمودار، همبستگی بین ویژگی ها و (دیابت) را نشان میدهد.
+        از این نمودار می توان فهمید کدام ویژگی ها تاثیر بیشتری بر بیماری دیابت دارند:
+        """)
     sns.heatmap(diabetes[['diabetes', 'age', 'bmi', 'HbA1c_level', 'blood_glucose_level', 'gender', 'heart_disease', 'hypertension']].corr(),
                  annot=True, fmt=".2f", cmap='coolwarm')
     plt.title('Heatmap of Diabetes Dataset Features')
     st.pyplot(plt)
+elif menu == "درباره پروژه":
+    plt.title('درباره پروژه')
+    st.write("""
+        این پروژه یک سامانه هوش مصنوعی است که با استفاده از الگوریتم‌های پیشرفته شبکه‌های عصبی، قابلیت پیش‌بینی ابتلا به دیابت را بادقت بالا فراهم کند. با تحلیل داده‌های بالینی و ژنتیکی، این ابزار می‌تواند به شناسایی زودهنگام بیماران مستعد و ارائه تحلیل‌های نموداری درمانی و پیشگیرانه کمک کند.
+        
+        """)
